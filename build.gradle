@@ -8,8 +8,8 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '1.8' // 현재 Gradle 버전이 지원하는 Java 버전으로 변경
-	targetCompatibility = '1.8'
+	sourceCompatibility = "1.9" // 현재 Gradle 버전이 지원하는 Java 버전으로 변경
+	targetCompatibility = "1.9"
 }
 
 
