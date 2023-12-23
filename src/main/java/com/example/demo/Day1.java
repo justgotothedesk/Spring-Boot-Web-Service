@@ -2,6 +2,8 @@ package com.example.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -69,24 +71,38 @@ class RestApiDemoController{
         }
         return Optional.empty();
     }
-    
+
     @PostMapping("/coffees")
     Coffee postCoffee(@RequestBody Coffee coffee){
         coffees.add(coffee);
         return coffee;
     }
+
+//    @PutMapping("/coffees/{id}")
+//    Coffee putCoffee(@PathVariable String id, @RequestBody Coffee coffee){
+//        int index = -1;
+//
+//        for(Coffee c: coffees){
+//            if(c.getId().equals(id)){
+//                index = coffees.indexOf(c);
+//                coffees.set(index, coffee);
+//            }
+//        }
+//        return (index == -1)?postCoffee(coffee):coffee;
+//    }
     
-    @PutMapping("/coffees/{id}")
-    Coffee putCoffee(@PathVariable String id, @RequestBody Coffee coffee){
+    @PutMapping("/{id}")
+    ResponseEntity<Coffee> putCoffee(@PathVariable String id, @RequestBody Coffee coffee){
         int index = -1;
-        
         for(Coffee c: coffees){
             if(c.getId().equals(id)){
                 index = coffees.indexOf(c);
                 coffees.set(index, coffee);
             }
         }
-        return (index == -1)?postCoffee(coffee):coffee;
+        return (index == -1)?
+                new ResponseEntity<>(postCoffee(coffee), HttpStatus.CREATED):
+                new ResponseEntity<>(coffee, HttpStatus.OK);
     }
     
     @DeleteMapping("/coffees/{id}")
