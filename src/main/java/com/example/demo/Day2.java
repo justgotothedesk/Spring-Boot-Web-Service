@@ -1,3 +1,4 @@
+// Day 2 : JPA Entity 설정 및 Day 1에서의 CRUD 매핑 기능 간단하게 줄이기
 package com.example.demo;
 
 import org.springframework.boot.SpringApplication;
@@ -21,7 +22,6 @@ public class Day2 {
 }
 
 interface CoffeeRepository extends CrudRepository<Coffee2, String>{}
-
 @Entity
 class Coffee2 {
     @Id
@@ -33,10 +33,14 @@ class Coffee2 {
         this.name = name;
     }
 
-    public Coffee2(String name){
-        this(UUID.randomUUID().toString(), name);
+    public Coffee2() {
+        this.id = UUID.randomUUID().toString();
     }
 
+    public Coffee2(String name){
+        this();
+        this.name = name;
+    }
     public String getId(){
         return id;
     }
@@ -70,7 +74,7 @@ class RestApiDemoController2{
         return coffeeRepository.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/coffee2/{id}")
     Optional<Coffee2> getCoffeeById(@PathVariable String id){
         return coffeeRepository.findById(id);
     }
@@ -80,7 +84,7 @@ class RestApiDemoController2{
         return coffeeRepository.save(coffee);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/coffee2/{id}")
     ResponseEntity<Coffee2> putCoffee(@PathVariable String id, @RequestBody Coffee2 coffee){
         return (!coffeeRepository.existsById(id))?
                 new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.CREATED):
