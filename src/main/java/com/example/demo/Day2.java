@@ -22,6 +22,7 @@ public class Day2 {
 }
 
 interface CoffeeRepository extends CrudRepository<Coffee2, String>{}
+
 @Entity
 class Coffee2 {
     @Id
@@ -38,7 +39,7 @@ class Coffee2 {
     }
 
     public Coffee2(String name){
-        this();
+        this(); // 기본 생성자 호출
         this.name = name;
     }
     public String getId(){
@@ -55,6 +56,7 @@ class Coffee2 {
 }
 
 @RestController
+@RequestMapping("/coffees2")
 class RestApiDemoController2{
     private final CoffeeRepository coffeeRepository;
 
@@ -74,7 +76,7 @@ class RestApiDemoController2{
         return coffeeRepository.findAll();
     }
 
-    @GetMapping("/coffee2/{id}")
+    @GetMapping("/{id}")
     Optional<Coffee2> getCoffeeById(@PathVariable String id){
         return coffeeRepository.findById(id);
     }
@@ -84,7 +86,7 @@ class RestApiDemoController2{
         return coffeeRepository.save(coffee);
     }
 
-    @PutMapping("/coffee2/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<Coffee2> putCoffee(@PathVariable String id, @RequestBody Coffee2 coffee){
         return (!coffeeRepository.existsById(id))?
                 new ResponseEntity<>(coffeeRepository.save(coffee), HttpStatus.CREATED):
