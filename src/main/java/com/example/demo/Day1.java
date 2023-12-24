@@ -90,7 +90,7 @@ class RestApiDemoController{
 //        }
 //        return (index == -1)?postCoffee(coffee):coffee;
 //    }
-    
+
     @PutMapping("/{id}")
     ResponseEntity<Coffee> putCoffee(@PathVariable String id, @RequestBody Coffee coffee){
         int index = -1;
@@ -104,7 +104,7 @@ class RestApiDemoController{
                 new ResponseEntity<>(postCoffee(coffee), HttpStatus.CREATED):
                 new ResponseEntity<>(coffee, HttpStatus.OK);
     }
-    
+
     @DeleteMapping("/coffees/{id}")
     void deleteCoffee(@PathVariable String id){
         coffees.removeIf(c -> c.getId().equals(id));
