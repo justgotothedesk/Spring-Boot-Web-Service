@@ -5,18 +5,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.redis.core.RedisHash;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.Instant;
+import java.util.Collection;
 
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@RedisHash
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Aircraft{
     @Id
+    @GeneratedValue
     private Long id;
     private String callsign, squawk, reg, flightno, route, type, category;
+    private int altitude, heading, speed;
     @JsonProperty("vert_rate")
     private int vertRate;
     @JsonProperty("selected_altitude")
@@ -71,5 +79,9 @@ public class Aircraft{
         } else {
             this.bds40SeenTime = Instant.ofEpochSecond(0);
         }
+    }
+
+    public String getReg() {
+        return reg;
     }
 }
