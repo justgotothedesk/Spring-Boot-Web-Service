@@ -38,22 +38,3 @@ public class PositionReporter {
         };
     }
 }
-
-@AllArgsConstructor
-@Configuration
-public class PositionRetriever {
-    private final AircraftRepository repo;
-
-    public PositionRetriever(AircraftRepository repo) {
-        this.repo = repo;
-    }
-
-    @Bean
-    Consumer<List<Aircraft>> retrieveAircraftPositions() {
-        return acList -> {
-            repo.deleteAll();
-            repo.saveAll(acList);
-            repo.findAll().forEach(System.out::println);
-        };
-    }
-}
