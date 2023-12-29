@@ -6,22 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.redis.core.RedisHash;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.time.Instant;
-import java.util.Collection;
 
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @RedisHash
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Aircraft{
-    @Id
-    @GeneratedValue
+
     private Long id;
     private String callsign, squawk, reg, flightno, route, type, category;
     private int altitude, heading, speed;
@@ -44,6 +37,9 @@ public class Aircraft{
     private Instant posUpdateTime;
     @JsonProperty("bds40_seen_time")
     private Instant bds40SeenTime;
+
+    public Aircraft(String csfn, String s, String csfn1, String s1, int i, int i1, int i2, float v, float v1) {
+    }
 
     public String getLastSeenTime(){
         return lastSeenTime.toString();

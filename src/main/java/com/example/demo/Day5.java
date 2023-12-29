@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SpringBootApplication
@@ -25,6 +24,10 @@ public class Day5 {
 @Configuration
 public class PositionReporter {
     private final PlaneFinderService pfService;
+
+    public PositionReporter(PlaneFinderService pfService) {
+        this.pfService = pfService;
+    }
 
     @Bean
     Supplier<Iterable<Aircraft>> reportPositions(){
