@@ -80,4 +80,6 @@ public class Aircraft{
     public String getReg() {
         return reg;
     }
+
+    public Long getId() {return id;}
 }
