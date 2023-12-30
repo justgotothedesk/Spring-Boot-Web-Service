@@ -13,6 +13,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.time.Instant;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WebFluxTest({PositionControllerTest.class})
@@ -42,8 +45,7 @@ public class PositionControllerTest {
                 true, false,
                 Instant.now(), Instant.now(), Instant.now());
 
-        Mockito.when(retriever.retrieveAircraftPositions()
-                .thenReturn(List.of(ac1, ac2)));
+        Mockito.when(repository.findAll()).thenReturn(List.of(ac1, ac2));
     }
     @AfterEach
     void tearDown() {
@@ -51,14 +53,15 @@ public class PositionControllerTest {
     }
     @Test
     void getCurrentAircraftPositions(@Autowired WebTestClient client) {
-        assert client.get()
+        final Iterable&lt;Aircraft&gt; acPostions = client.get()
                 .uri("/aircraft")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(Iterable.class)
+                .expectBodyList(Aircraft.class)
                 .returnResult()
-                .getResponseBody()
-                .iterator()
-                .hasNext();
+                .getResponseBody();
+
+        assertEquals(List.of(ac1, ac2), acPositions)
+
     }
 }
