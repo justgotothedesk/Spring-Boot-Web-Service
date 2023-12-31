@@ -3,43 +3,37 @@ package com.example.demo;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.function.Consumer;
 
 @AllArgsConstructor
 @Configuration
 public class PositionRetriever {
     private final AircraftRepository repo;
     private final WebSocketHandler handler;
+    private final WebClient client;
 
-    public PositionRetriever(AircraftRepository repo, WebSocketHandler handler) {
+    public PositionRetriever(AircraftRepository repo, WebSocketHandler handler, WebClient client) {
         this.repo = repo;
         this.handler = handler;
+        this.client = client;
     }
 
     @Bean
-    Consumer<List<Aircraft>> retrieveAircraftPositions() {
-        return acList -> {
-            repo.deleteAll();
-            repo.saveAll(acList);
-            repo.findAll().forEach(System.out::println);
-        };
+    Iterable<Aircraft> retrieveAircraftPositions(String endpoint) {
+        repo.deleteAll();
+
+        client.get()
+                .uri((null != endpoint) ? endpoint:"")
+                .retrieve()
+                .bodyToFlux(Aircraft.class)
+                .filter(ac -> !ac.getReg().isEmpty())
+                .toStream()
+                .forEach(repo::save);
+
+        return repo.findAll();
     }
 
-    private void sendPositions() {
-        if(repo.count() > 0) {
-            for(WebSocketSession sessionInList : handler.getSessionList()) {
-                try {
-                    sessionInList.sendMessage(
-                            new TextMessage(repo.findAll().toString())
-                    );
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 }

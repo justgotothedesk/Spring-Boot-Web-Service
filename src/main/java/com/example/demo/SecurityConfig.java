@@ -2,6 +2,7 @@ package com.example.demo;// Day 8
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,6 +13,7 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepo
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.reactive.function.client.WebClient;
 
 public class SecurityConfig {
@@ -38,18 +40,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        return http
-                .authorizeHttpRequests()
-                .requestMatchers("/aircraftadmin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .and()
-                .build();
-    }
-
-    @Bean
     WebClient client(ClientRegistrationRepository regRepo,
                      OAuth2AuthorizedClientRepository cliRepo) {
         ServletOAuth2AuthorizedClientExchangeFilterFunction filter =
@@ -61,5 +51,16 @@ public class SecurityConfig {
                 .baseUrl("http://localhost:7634/")
                 .apply(filter.oauth2Configuration())
                 .build();
+    }
+
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        http
+                .authorizeExchange()
+                .pathMatchers("/aircraft/**").hasAuthority("SCOPE_closedid")
+                .pathMatchers("/aircraftadmin/**").hasAuthority("SCOPE_openid")
+                .and().oauth2ResourceServer().jwt();
+
+        return http.build();
     }
 }
