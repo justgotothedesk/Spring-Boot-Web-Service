@@ -8,7 +8,7 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = "1.9" // 현재 Gradle 버전이 지원하는 Java 버전으로 변경
+	sourceCompatibility = "1.9"
 	targetCompatibility = "1.9"
 }
 
@@ -54,6 +54,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'com.okta.spring:okta-spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
+	implementation 'org.springframework.boot:spring-boot-maven-plug'
 }
 
 tasks.named('bootBuildImage') {
