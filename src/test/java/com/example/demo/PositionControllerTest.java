@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -66,6 +67,7 @@ public class PositionControllerTest {
                 Instant.now(), Instant.now(), Instant.now());
 
         //Mockito.when(service.getAllAircraft()).thenReturn(List.of(ac1, ac2, ac3));
+        Hooks.onOperatorDebug();
         Mockito.when(service.getAllAircraft()).thenReturn(
                 Flux.just(ac1, ac2, ac3)
                         .concatWith(Flux.error(new Throwable("Bad position report")))

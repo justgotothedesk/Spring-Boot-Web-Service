@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import reactor.core.publisher.Hooks;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.function.Supplier;
 @SpringBootApplication
 public class Day5 {
     public static void main(String[] args) {
+        Hooks.onOperatorDebug();
         SpringApplication.run(Day5.class, args);
     }
 }
