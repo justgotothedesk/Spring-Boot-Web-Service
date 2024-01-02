@@ -56,6 +56,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
 	implementation 'org.springframework.boot:spring-boot-maven-plug'
+
+	implementation 'io.projectreactor:reactor-core'
+	testImplementation 'io.projectreactor:reactor-test'
 }
 
 tasks.named('bootBuildImage') {
