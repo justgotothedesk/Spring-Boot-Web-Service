@@ -17,6 +17,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+import reactor.tools.agent.ReactorDebugAgent;
 
 import java.time.Instant;
 import java.util.List;
@@ -67,10 +68,13 @@ public class PositionControllerTest {
                 Instant.now(), Instant.now(), Instant.now());
 
         //Mockito.when(service.getAllAircraft()).thenReturn(List.of(ac1, ac2, ac3));
-        Hooks.onOperatorDebug();
+        //Hooks.onOperatorDebug();
+        ReactorDebugAgent.init();
         Mockito.when(service.getAllAircraft()).thenReturn(
                 Flux.just(ac1, ac2, ac3)
+                        //.checkpoint("All Aircraft: after all good positions reported", true)
                         .concatWith(Flux.error(new Throwable("Bad position report")))
+                        //.checkpoint("All Aircraft: after appending bad position reported", true)
         );
         Mockito.when(service.getAircraftById(1L)).thenReturn(Mono.just(ac1));
         Mockito.when(service.getAircraftById(2L)).thenReturn(Mono.just(ac2));
