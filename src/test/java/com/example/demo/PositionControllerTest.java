@@ -65,7 +65,11 @@ public class PositionControllerTest {
                 true, false,
                 Instant.now(), Instant.now(), Instant.now());
 
-        Mockito.when(service.getAllAircraft()).thenReturn(List.of(ac1, ac2, ac3));
+        //Mockito.when(service.getAllAircraft()).thenReturn(List.of(ac1, ac2, ac3));
+        Mockito.when(service.getAllAircraft()).thenReturn(
+                Flux.just(ac1, ac2, ac3)
+                        .concatWith(Flux.error(new Throwable("Bad position report")))
+        );
         Mockito.when(service.getAircraftById(1L)).thenReturn(Mono.just(ac1));
         Mockito.when(service.getAircraftById(2L)).thenReturn(Mono.just(ac2));
         Mockito.when(service.getAircraftById(3L)).thenReturn(Mono.just(ac3));
