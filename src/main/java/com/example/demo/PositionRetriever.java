@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.socket.WebSocketSession;
+import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 
@@ -22,7 +23,7 @@ public class PositionRetriever {
     }
 
     @Bean
-    Iterable<Aircraft> retrieveAircraftPositions(String endpoint) {
+    Flux<Aircraft> retrieveAircraftPositions(String endpoint) {
         repo.deleteAll();
 
         client.get()
